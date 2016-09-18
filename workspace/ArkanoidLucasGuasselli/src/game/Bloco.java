@@ -1,3 +1,8 @@
+/*
+ * @author Lucas Guasselli de Moraes
+ * @date 17/09/2016
+ * @version 1.0
+ */
 package game;
 
 import com.senac.SimpleJava.Graphics.Canvas;
@@ -8,13 +13,10 @@ import com.senac.SimpleJava.Graphics.Sprite;
 public class Bloco extends Sprite {
 
 	private boolean desenhaBloco=true;
-	
-	
+		
 	public Bloco(Color cor) {
 		super(15, 10,cor);
 	}//fecha construtor
-
-
 
 	public boolean bateu(Bola bola){
 		Point posBola = bola.getPosition();
@@ -27,8 +29,7 @@ public class Bloco extends Sprite {
 		if(posBola.x+bola.getWidth() < posBloco.x){
 			return true;
 			// não bateu
-		}
-		
+		}		
 		else if(posBola.x > posBloco.x+getWidth() ){
 			return true;
 			// não bateu
@@ -58,4 +59,8 @@ public class Bloco extends Sprite {
 	public void apagaBloco(){
 		desenhaBloco = false;
 	}//fcha apagabloco
+	
+	public void restauraBloco(){
+		desenhaBloco = true;
+	}//fecha restauraBloco
 }//fecha classe
