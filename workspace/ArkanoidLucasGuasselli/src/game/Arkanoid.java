@@ -5,11 +5,14 @@
  */
 package game;
 
+import java.io.IOException;
+
 import javax.swing.JOptionPane;
 
 import com.senac.SimpleJava.Graphics.Canvas;
 import com.senac.SimpleJava.Graphics.Color;
 import com.senac.SimpleJava.Graphics.GraphicApplication;
+import com.senac.SimpleJava.Graphics.Image;
 import com.senac.SimpleJava.Graphics.Point;
 import com.senac.SimpleJava.Graphics.Resolution;
 import com.senac.SimpleJava.Graphics.events.KeyboardAction;
@@ -21,8 +24,11 @@ public class Arkanoid extends GraphicApplication {
 	
 	private int estagio = 1;
 	private int vidas = 3;
-	public int pontos = 0;
+	
+	private int recorde = 0;
+	private int pontos = 0;
 	private int armazenaPontos = 0;
+	
 	private int quantidadeBloco = 10;
 	
 	private Bloco linha1[] = new Bloco[quantidadeBloco];
@@ -35,17 +41,34 @@ public class Arkanoid extends GraphicApplication {
 	private Bloco linha8[] = new Bloco[quantidadeBloco];
 	private Bloco linha9[] = new Bloco[quantidadeBloco];
 	
+	private Image background1, background2, background3;
+	//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< DRAW >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+	
 	@Override
 	protected void draw(Canvas canvas) {
 		canvas.clear();
 		
-		canvas.setBackground(Color.BLACK);
+		if(estagio == 1){
+			canvas.drawImage(background1, 0, 0);
+		}else if(estagio == 2){
+			canvas.drawImage(background2, 0, 0);
+		}else if(estagio == 3){
+			canvas.drawImage(background3, 0, 0);
+		}//if-else
+		
 		canvas.setForeground(Color.BLUE);
 		
-		canvas.putText(262, 20, 9, ((String)"Pontuacao").toString());
+		canvas.putText(262, 20, 10, ((String)"Score: ").toString());
 		canvas.putText(262, 30, 10, ((Integer)pontos).toString());
-		canvas.putText(262, 60, 10, ((String)"Vidas: ").toString());
-		canvas.putText(295, 60, 10, ((Integer)vidas).toString());	
+		canvas.putText(262, 50, 10, ((String)"High Score: ").toString());
+		canvas.putText(262, 60, 10, ((Integer)recorde).toString());	
+		canvas.putText(262, 80, 10, ((String)"Vidas: ").toString());
+		canvas.putText(295, 80, 10, ((Integer)vidas).toString());	
+		canvas.putText(262, 95, 10, ((String)"|").toString());
+		canvas.putText(262, 115, 10, ((String)"|").toString());
+		canvas.putText(262, 135, 10, ((String)"|").toString());
+		canvas.putText(262, 155, 10, ((String)"|").toString());
+		canvas.putText(262, 175, 10, ((String)"|").toString());
 		
 		bola.draw(canvas);		
 		paddle.draw(canvas);		
@@ -62,11 +85,12 @@ public class Arkanoid extends GraphicApplication {
 			desenhaBloco(linha7, canvas);
 			desenhaBloco(linha8, canvas);
 			desenhaBloco(linha9, canvas);
-		}//fecha else if
-		
+		}//fecha else if		
 		
 	}//fecha draw
 
+	//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< SETUP >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+	
 	@Override
 	protected void setup() {
 		setResolution(Resolution.MODE_X);
@@ -74,6 +98,8 @@ public class Arkanoid extends GraphicApplication {
 	
 		bola = new Bola();
 		paddle = new Paddle();
+		
+		colocaImagens();
 		//estagio 1
 		criaBlocos(linha1, 25, Color.RED, 1);
 		criaBlocos(linha2, 40, Color.RED, 1);
@@ -89,7 +115,6 @@ public class Arkanoid extends GraphicApplication {
 			
 		iniciaJogo(linha1, linha2, linha3,1 ,1 ,1);
 		
-		
 		//move paddle para esquerda		
 		bindKeyPressed("LEFT", new KeyboardAction() {
 			@Override
@@ -104,25 +129,29 @@ public class Arkanoid extends GraphicApplication {
 			public void handleEvent() {
 				paddle.moveLeft();
 			}
-		});
-		
+		});		
 		
 	}//fecha setup
 
+	//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< LOOP >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+	
 	@Override
 	protected void loop() {
 		
 		//colisao da bola com a parede
 			colidiuParede(bola);
-		//colisao do paddle com a bola
-			paddle.bateu(bola);
-		//movimento da bola
+			
+		//controla a colisao da bola com o paddle	
+			colidiuPaddle(bola);
+		
 			bola.move();
+			
 		//controlam a morte e JOptionPane depois de tres mortes
 			morte(bola, paddle);
 			gameOver();
+		
 		//looping para controlar a morte dos blocos
-			
+		
 			if(estagio == 1){
 				controlaBloco(linha1);
 				controlaBloco(linha2);
@@ -136,57 +165,15 @@ public class Arkanoid extends GraphicApplication {
 				controlaBloco(linha8);
 				controlaBloco(linha9);
 			}
-			
-			controlaEstagio();
-			
-								
-		if(paddle.bateu(bola) == true){
-			bola.invertVertical();
-		}//fecha if
 		
+		//controla a troca de estagio	
+			controlaEstagio();			
 		
-				
+			controlaRecorde();				
 		redraw();
 	}//fecha loop 
 		
-	private void controlaBloco(Bloco[] linha){
-		
-		for(int i = 0; i<quantidadeBloco; i++){
-
-			if(linha[i].bateu(bola)){
-				bola.invertVertical();
-				pontos = pontos +100;
-			}//fecha if				
-			
-				
-		}//fecha for
-	}//fecha controlaBloco
-	
-	
-	private void desenhaBloco(Bloco[] linha, Canvas canvas){
-		for(int i = 0; i < quantidadeBloco; i++){
-			linha[i].draw(canvas);
-		}//fecha for
-	}
-	private void colidiuParede(Bola bola) {
-		Point posicao = bola.getPosition();
-		if (posicao.x < 0 || posicao.x >= Resolution.MSX.width-5){
-			bola.invertHorizontal();
-		}
-		if (posicao.y < 0 || posicao.y >= Resolution.MSX.height-5) {
-			bola.invertVertical();
-		}//fecha if	
-	}//fecha colidiubola
-	
-	private void criaBlocos(Bloco[] linha, int y, Color cor, int vida){
-			
-		for(int i = 0; i < quantidadeBloco; i++){
-				linha[i] = new Bloco(cor, vida);
-				int x = (i)*20+ 30;
-				linha[i].setPosition(x,y);			
-		}//fecha for		
-		
-	}//fecha criaBlocos
+	//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< METODOS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 	
 	private void iniciaJogo(Bloco[] linha, Bloco[] linha2, Bloco[] linha3,int vida1, int vida2, int vida3){
 		//posição inicial da bola
@@ -227,6 +214,93 @@ public class Arkanoid extends GraphicApplication {
 		
 	}//fecha controlaEstagio
 	
+	private void colidiuParede(Bola bola) {
+		Point posicao = bola.getPosition();
+		if (posicao.x < 0 || posicao.x >= Resolution.MSX.width-5){
+			bola.invertHorizontal();
+		}
+		if (posicao.y < 0 || posicao.y >= Resolution.MSX.height-5) {
+			bola.invertVertical();
+		}//fecha if	
+	}//fecha colidiubola
+	
+	private void colidiuPaddle(Bola bola){
+		if(paddle.bateu(bola) == true){
+			bola.invertVertical();
+		}//fecha if
+	}
+	private void controlaRecorde(){
+		if(pontos > recorde){
+			recorde = pontos;
+		}//fecha if
+	}//fecha controla recorde
+	
+	private void colocaImagens(){
+		try{
+			background1 = new Image("Imagens/background1.jpg");
+		}catch (IOException e) {
+			e.printStackTrace(System.err);
+				JOptionPane.showMessageDialog(
+					null,
+					"NAO FOI POSSIVEL CARREGAR A IMAGEM",
+					"ERRO",
+					JOptionPane.ERROR_MESSAGE);
+		}//fecha try-catch
+		
+		try{
+			background2 = new Image("Imagens/background2.jpg");
+		}catch (IOException e) {
+			e.printStackTrace(System.err);
+				JOptionPane.showMessageDialog(
+					null,
+					"NAO FOI POSSIVEL CARREGAR A IMAGEM",
+					"ERRO",
+					JOptionPane.ERROR_MESSAGE);
+		}//fecha try-catch	
+		
+		try{
+			background3 = new Image("Imagens/background3.jpg");
+		}catch (IOException e) {
+			e.printStackTrace(System.err);
+				JOptionPane.showMessageDialog(
+					null,
+					"NAO FOI POSSIVEL CARREGAR A IMAGEM",
+					"ERRO",
+					JOptionPane.ERROR_MESSAGE);
+		}//fecha try-catch	
+	}//fecha colocaImagens
+	
+	//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< METODOS (BLOCO) >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+	
+	private void controlaBloco(Bloco[] linha){
+		
+		for(int i = 0; i<quantidadeBloco; i++){
+
+			if(linha[i].bateu(bola)){
+				
+				pontos = pontos +100;
+			}//fecha if						
+		}//fecha for
+	}//fecha controlaBloco
+	
+	private void desenhaBloco(Bloco[] linha, Canvas canvas){
+		for(int i = 0; i < quantidadeBloco; i++){
+			linha[i].draw(canvas);
+		}//fecha for
+	}//fecha desenhaBloco	
+	
+	private void criaBlocos(Bloco[] linha, int y, Color cor, int vida){
+			
+		for(int i = 0; i < quantidadeBloco; i++){
+				linha[i] = new Bloco(cor, vida);
+				int x = (i)*20+ 30;
+				linha[i].setPosition(x,y);			
+		}//fecha for		
+		
+	}//fecha criaBlocos	
+	
+	//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< MORTE/GAMEOVER >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+		
 	private void morte(Bola bola, Paddle paddle){
 		
 		Point posBola = bola.getPosition();
@@ -243,9 +317,7 @@ public class Arkanoid extends GraphicApplication {
 			}else if(estagio ==3){
 				iniciaJogo(linha7,linha8, linha9, 3, 3, 3);
 				pontos = armazenaPontos;
-			}//fecha if else
-			
-			
+			}//fecha if else			
 		}//fecha if	
 	}//fecha morte
 	
@@ -256,12 +328,11 @@ public class Arkanoid extends GraphicApplication {
 				"GAMEOVER",
 				"YOU DIE!",
 				JOptionPane.INFORMATION_MESSAGE);
+			iniciaJogo(linha1, linha2, linha3, 1, 1, 1);
 			vidas = 3;
 			pontos = 0;
 			estagio = 1;
-		}//fecha if
-		
+		}//fecha if		
 	}//fecha gameOver
-
 	
 }//fecha classe

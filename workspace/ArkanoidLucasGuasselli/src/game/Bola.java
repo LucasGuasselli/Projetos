@@ -13,7 +13,7 @@ public class Bola extends Sprite {
 	private int dx = 1;
 
 	public Bola() {
-		super(5,5,Color.GRAY);
+		super(5,5,Color.WHITE);
 	}//fecha construtor
 	public void move() {
 		super.move(dx, dy);

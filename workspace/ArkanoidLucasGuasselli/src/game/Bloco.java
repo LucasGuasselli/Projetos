@@ -47,8 +47,15 @@ public class Bloco extends Sprite {
 		else if(posBola.y > posBloco.y+getHeight()){
 			return false;
 			// não bateu
-		}
-		else{			
+		}else{			
+				if(posBola.x == posBloco.x+getWidth()){
+					bola.invertHorizontal();
+				}else if(posBola.x+bola.getWidth() == posBloco.x){
+					bola.invertHorizontal();
+				}else{
+					bola.invertVertical();
+				}//fecha if-else
+			
 			vidaBloco--;
 				if(vidaBloco == 0){
 					desenhaBloco = false;

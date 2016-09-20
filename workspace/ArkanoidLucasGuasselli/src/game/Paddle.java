@@ -12,7 +12,7 @@ import com.senac.SimpleJava.Graphics.Sprite;
 public class Paddle extends Sprite {
 
 	public Paddle() {
-		super(30, 5, Color.BLUE);		
+		super(30, 5, Color.WHITE);		
 	}//fecha construtor
 	
 	public void moveRight(){
@@ -41,19 +41,17 @@ public boolean bateu(Bola bola) {
 		int esquerda = tamBola.x;
 		int direita = tamBola.x + tamBola.width;
 			
-		if (posBola.x+4 > direita) {
+		if (posBola.x+getHeight() > direita) {
 			return false;
-		}                     
-		if(posBola.x+4 < esquerda) {
+		}else if(posBola.x+getHeight() < esquerda) {
 			return false;
+		}else if(posBola.y+getHeight() < cima) {
+			return false;
+		}else if(posBola.y+getHeight() > baixo) {
+			return false;
+		}else{		
+			return true;	
 		}
-		if(posBola.y+4 < cima) {
-			return false;
-		}
-		if(posBola.y+4 > baixo) {
-			return false;
-		}		
-		return true;		
 	}//fecha bateu
 	
 }//fecha classe
