@@ -19,13 +19,21 @@ public class Arkanoid extends GraphicApplication {
 	private Bola bola;
 	private Paddle paddle;
 	
+	private int estagio = 1;
 	private int vidas = 3;
-	private int pontos = 0;
+	public int pontos = 0;
+	private int armazenaPontos = 0;
 	private int quantidadeBloco = 10;
 	
-	private Bloco linha1[];
-	private Bloco linha2[];
-	private Bloco linha3[];
+	private Bloco linha1[] = new Bloco[quantidadeBloco];
+	private Bloco linha2[] = new Bloco[quantidadeBloco];
+	private Bloco linha3[] = new Bloco[quantidadeBloco];
+	private Bloco linha4[] = new Bloco[quantidadeBloco];
+	private Bloco linha5[] = new Bloco[quantidadeBloco];
+	private Bloco linha6[] = new Bloco[quantidadeBloco];
+	private Bloco linha7[] = new Bloco[quantidadeBloco];
+	private Bloco linha8[] = new Bloco[quantidadeBloco];
+	private Bloco linha9[] = new Bloco[quantidadeBloco];
 	
 	@Override
 	protected void draw(Canvas canvas) {
@@ -42,9 +50,20 @@ public class Arkanoid extends GraphicApplication {
 		bola.draw(canvas);		
 		paddle.draw(canvas);		
 		
-		desenhaBloco(linha1, canvas);
-		desenhaBloco(linha2, canvas);
-		desenhaBloco(linha3, canvas);
+		if(estagio == 1){
+			desenhaBloco(linha1, canvas);
+			desenhaBloco(linha2, canvas);
+			desenhaBloco(linha3, canvas);
+		}else if(estagio == 2){
+			desenhaBloco(linha4, canvas);
+			desenhaBloco(linha5, canvas);
+			desenhaBloco(linha6, canvas);
+		}else if(estagio == 3){
+			desenhaBloco(linha7, canvas);
+			desenhaBloco(linha8, canvas);
+			desenhaBloco(linha9, canvas);
+		}//fecha else if
+		
 		
 	}//fecha draw
 
@@ -55,12 +74,19 @@ public class Arkanoid extends GraphicApplication {
 	
 		bola = new Bola();
 		paddle = new Paddle();
-		criaBlocos(linha1 = new Bloco[quantidadeBloco], 25, Color.RED);
-		criaBlocos(linha2 = new Bloco[quantidadeBloco], 40, Color.YELLOW);
-		criaBlocos(linha3 = new Bloco[quantidadeBloco], 55, Color.GRAY);
 		
-		iniciaJogo();
-		morte(bola, paddle);
+		criaBlocos(linha1, 25, Color.RED, 1);
+		criaBlocos(linha2, 40, Color.RED, 1);
+		criaBlocos(linha3, 55, Color.RED, 1);
+		criaBlocos(linha4, 15, Color.BLUE, 1);
+		criaBlocos(linha5, 40, Color.YELLOW, 5);
+		criaBlocos(linha6, 55, Color.BLUE, 1);
+		criaBlocos(linha7, 95, Color.GRAY, 3);
+		criaBlocos(linha8, 15, Color.GRAY, 3);
+		criaBlocos(linha9, 30, Color.GRAY, 3);
+			
+		iniciaJogo(linha1, linha2, linha3,0 ,0 ,0);
+		
 		
 		//move paddle para esquerda		
 		bindKeyPressed("LEFT", new KeyboardAction() {
@@ -69,6 +95,7 @@ public class Arkanoid extends GraphicApplication {
 				paddle.moveRight();
 			}
 		});
+		
 		//move paddle para direita
 		bindKeyPressed("RIGHT", new KeyboardAction() {
 			@Override
@@ -82,6 +109,7 @@ public class Arkanoid extends GraphicApplication {
 
 	@Override
 	protected void loop() {
+		
 		//colisao da bola com a parede
 			colidiuParede(bola);
 		//colisao do paddle com a bola
@@ -92,31 +120,47 @@ public class Arkanoid extends GraphicApplication {
 			morte(bola, paddle);
 			gameOver();
 		//looping para controlar a morte dos blocos
-			controlaBloco(linha1);
-			controlaBloco(linha2);
-			controlaBloco(linha3);
-				
+			
+			if(estagio == 1){
+				controlaBloco(linha1);
+				controlaBloco(linha2);
+				controlaBloco(linha3);				
+			}else if(estagio == 2){
+				controlaBloco(linha4);
+				controlaBloco(linha5);
+				controlaBloco(linha6);
+			}else if(estagio == 3){
+				controlaBloco(linha7);
+				controlaBloco(linha8);
+				controlaBloco(linha9);
+			}
+			
+			controlaEstagio();
+			
+								
 		if(paddle.bateu(bola) == true){
 			bola.invertVertical();
 		}//fecha if
 		
+		
+				
 		redraw();
 	}//fecha loop 
 		
 	private void controlaBloco(Bloco[] linha){
+		
 		for(int i = 0; i<quantidadeBloco; i++){
-			linha[i].bateu(bola);
-				if(linha[i].bateu(bola) == false){
-					linha[i].apagaBloco();					
-			}//fecha if
+
+			if(linha[i].bateu(bola)){
+				bola.invertVertical();
+				pontos = pontos +100;
+			}//fecha if				
+			
+				
 		}//fecha for
 	}//fecha controlaBloco
 	
-	private void adicionaPontos() {
-		pontos = pontos + 100; 
-		
-	}//fecha adiciona pontos
-
+	
 	private void desenhaBloco(Bloco[] linha, Canvas canvas){
 		for(int i = 0; i < quantidadeBloco; i++){
 			linha[i].draw(canvas);
@@ -132,38 +176,54 @@ public class Arkanoid extends GraphicApplication {
 		}//fecha if	
 	}//fecha colidiubola
 	
-	private void criaBlocos(Bloco[] linha, int y, Color cor){
+	private void criaBlocos(Bloco[] linha, int y, Color cor, int vida){
 			
 		for(int i = 0; i < quantidadeBloco; i++){
-			linha[i] = new Bloco(cor);
-			int x = (i)*20+ 30;
-			linha[i].setPosition(x,y);			
+				linha[i] = new Bloco(cor, vida);
+				int x = (i)*20+ 30;
+				linha[i].setPosition(x,y);			
 		}//fecha for		
 		
 	}//fecha criaBlocos
 	
-	private void iniciaJogo(){
+	private void iniciaJogo(Bloco[] linha, Bloco[] linha2, Bloco[] linha3,int vida1, int vida2, int vida3){
 		//posição inicial da bola
-			bola.setPosition(	Resolution.MSX.width / 2,
-								Resolution.MSX.height / 2);
+			bola.setPosition(	Resolution.MSX.width / 2 ,
+								Resolution.MSX.height / 2+ 10);
 		
 		//posicao inicia do paddle
 			paddle.setPosition(	Resolution.MSX.width/2-5,
 								Resolution.MSX.height-10
-				);
+				);		
 		
 		for(int i = 0;i<quantidadeBloco; i++){
-			linha1[i].restauraBloco();
+			linha[i].restauraBloco();
+			linha[i].setVidaBloco(vida1);
 		}//fecha for
 		
 		for(int i = 0;i<quantidadeBloco; i++){
 			linha2[i].restauraBloco();
+			linha2[i].setVidaBloco(vida2);
 		}//fecha for
 		
 		for(int i = 0;i<quantidadeBloco; i++){
 			linha3[i].restauraBloco();
+			linha3[i].setVidaBloco(vida3);
 		}//fecha for
 	}//fecha iniciaJogo
+	
+	private void controlaEstagio(){
+		if(pontos == 3000){
+			pontos = pontos + 500;
+			armazenaPontos = pontos;
+			estagio++;
+		}else if(pontos == 10500 ){
+			pontos = pontos + 500;
+			armazenaPontos = pontos;
+			estagio++;
+		}//fecha if else
+		
+	}//fecha controlaEstagio
 	
 	private void morte(Bola bola, Paddle paddle){
 		
@@ -172,7 +232,18 @@ public class Arkanoid extends GraphicApplication {
 		
 		if(posBola.y > posPaddle.y){
 			vidas--;
-			iniciaJogo();
+			if(estagio == 1){
+				iniciaJogo(linha1, linha2, linha3, 1, 1,1);
+				pontos = 0;
+			}else if(estagio == 2){
+				iniciaJogo(linha4, linha5, linha6, 1, 5, 1);
+				pontos = armazenaPontos;
+			}else if(estagio ==3){
+				iniciaJogo(linha7,linha8, linha9, 3, 3, 3);
+				pontos = armazenaPontos;
+			}//fecha if else
+			
+			
 		}//fecha if	
 	}//fecha morte
 	
@@ -184,11 +255,10 @@ public class Arkanoid extends GraphicApplication {
 				"YOU DIE!",
 				JOptionPane.INFORMATION_MESSAGE);
 			vidas = 3;
+			pontos = 0;
 		}//fecha if
 		
 	}//fecha gameOver
+
+	
 }//fecha classe
-
-
-
-

@@ -11,13 +11,19 @@ import com.senac.SimpleJava.Graphics.Point;
 import com.senac.SimpleJava.Graphics.Sprite;
 
 public class Bloco extends Sprite {
-
+	
 	private boolean desenhaBloco=true;
-		
-	public Bloco(Color cor) {
+	private int vidaBloco = 0; 
+	
+	public Bloco(Color cor, int vida) {
 		super(15, 10,cor);
+		vidaBloco = vida;
 	}//fecha construtor
-
+	
+	public void setVidaBloco(int vida){
+		this.vidaBloco = vida;
+	}
+	
 	public boolean bateu(Bola bola){
 		Point posBola = bola.getPosition();
 		Point posBloco = super.getPosition();
@@ -27,25 +33,28 @@ public class Bloco extends Sprite {
 		}//fecha if
 			
 		if(posBola.x+bola.getWidth() < posBloco.x){
-			return true;
+			return false;
 			// não bateu
 		}		
 		else if(posBola.x > posBloco.x+getWidth() ){
-			return true;
+			return false;
 			// não bateu
 		}
 		else if(posBola.y+bola.getHeight() < posBloco.y){
-			return true;
+			return false;
 			// não bateu
 		}
 		else if(posBola.y > posBloco.y+getHeight()){
-			return true;
+			return false;
 			// não bateu
 		}
-		else{
-			desenhaBloco = false;
-			bola.invertVertical();
-			return false;
+		else{			
+			vidaBloco--;
+				if(vidaBloco == 0){
+					desenhaBloco = false;
+					return true;
+				}
+			return true;	
 		}//fecha if-else
 	} //fecha bateu
 
@@ -55,10 +64,6 @@ public class Bloco extends Sprite {
 			super.draw(canvas);
 	}//fecha if
 	}//fecha draw
-	
-	public void apagaBloco(){
-		desenhaBloco = false;
-	}//fcha apagabloco
 	
 	public void restauraBloco(){
 		desenhaBloco = true;
