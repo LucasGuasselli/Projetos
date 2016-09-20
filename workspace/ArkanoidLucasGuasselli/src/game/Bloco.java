@@ -52,8 +52,8 @@ public class Bloco extends Sprite {
 			vidaBloco--;
 				if(vidaBloco == 0){
 					desenhaBloco = false;
-					return true;
-				}
+						return true;
+				}//fecha if				
 			return true;	
 		}//fecha if-else
 	} //fecha bateu

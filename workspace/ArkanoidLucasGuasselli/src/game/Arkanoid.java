@@ -74,18 +74,20 @@ public class Arkanoid extends GraphicApplication {
 	
 		bola = new Bola();
 		paddle = new Paddle();
-		
+		//estagio 1
 		criaBlocos(linha1, 25, Color.RED, 1);
 		criaBlocos(linha2, 40, Color.RED, 1);
 		criaBlocos(linha3, 55, Color.RED, 1);
+		//estagio 2
 		criaBlocos(linha4, 15, Color.BLUE, 1);
 		criaBlocos(linha5, 40, Color.YELLOW, 5);
 		criaBlocos(linha6, 55, Color.BLUE, 1);
+		//estagio 3
 		criaBlocos(linha7, 95, Color.GRAY, 3);
 		criaBlocos(linha8, 15, Color.GRAY, 3);
 		criaBlocos(linha9, 30, Color.GRAY, 3);
 			
-		iniciaJogo(linha1, linha2, linha3,0 ,0 ,0);
+		iniciaJogo(linha1, linha2, linha3,1 ,1 ,1);
 		
 		
 		//move paddle para esquerda		
@@ -233,7 +235,7 @@ public class Arkanoid extends GraphicApplication {
 		if(posBola.y > posPaddle.y){
 			vidas--;
 			if(estagio == 1){
-				iniciaJogo(linha1, linha2, linha3, 1, 1,1);
+				iniciaJogo(linha1, linha2, linha3, 1, 1, 1);
 				pontos = 0;
 			}else if(estagio == 2){
 				iniciaJogo(linha4, linha5, linha6, 1, 5, 1);
@@ -256,6 +258,7 @@ public class Arkanoid extends GraphicApplication {
 				JOptionPane.INFORMATION_MESSAGE);
 			vidas = 3;
 			pontos = 0;
+			estagio = 1;
 		}//fecha if
 		
 	}//fecha gameOver
