@@ -8,7 +8,8 @@ public class GUICadSGEC {
 	Parser<Funcionarios> parserFun = new FuncionariosParser();
 	Parser<Projetos> parserProj = new ProjetosParser();
 	Parser<Competencias> parserComp = new CompetenciasParser();
-
+	Parser<Colaboradores> parserColab = new ColaboradoresParser();
+	
 	public static void main(String[] args) {
 		try {
 			(new GUICadSGEC()).run();
@@ -52,6 +53,9 @@ public class GUICadSGEC {
 				Competencias comp = null;
 				verArquivo("\nRelação de Competencias:\n","src/arquivos/competencias.csv", comp, parserComp);
 				break;
+			case 4:
+				Colaboradores colab = null;
+				verArquivo("\nRelação de Colaboradores:\n","src/arquivos/colaboradores.csv", colab, parserColab);
 			default:
 				System.exit(0);
 			}//fecha switch

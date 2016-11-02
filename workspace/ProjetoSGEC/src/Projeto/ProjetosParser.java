@@ -19,7 +19,7 @@ public class ProjetosParser implements Parser<Projetos> {
 		
 		for(int i = 0; i < num_competencias; i++){
 			String comp = projeto.next();
-			p.ArmazenaCompetencias(i,comp);
+			p.armazenaCompetencias(i,comp);
 		}//fecha for
 		
 		

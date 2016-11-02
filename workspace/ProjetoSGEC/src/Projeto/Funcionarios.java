@@ -43,7 +43,7 @@ public class Funcionarios {
 	public String toString() {		
 		return "Funcionario: " + nome + 
 				"\nSalario: " + salario + 
-				"\nNúmero de competencias: " + num_competencias +
+				"\nNumero de competencias: " + num_competencias +
 				"\nCompetencias: " + mostraCompetencia()+ "\n";	 		
 				
 	}//fecha toString
