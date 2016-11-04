@@ -5,10 +5,21 @@ import com.senac.SimpleJava.Console;
 
 public class GUICadSGEC {
 	
+
 	Parser<Funcionarios> parserFun = new FuncionariosParser();
 	Parser<Projetos> parserProj = new ProjetosParser();
 	Parser<Competencias> parserComp = new CompetenciasParser();
 	Parser<Colaboradores> parserColab = new ColaboradoresParser();
+	
+	Vetor<Funcionarios> VetorFuncionarios = new Vetor<>();
+	Vetor<Projetos> VetorProjetos = new Vetor<>();
+	Vetor<Competencias> VetorCompetencias = new Vetor<>();
+	Vetor<Colaboradores> VetorColaboradores = new Vetor<>();
+	
+	Funcionarios func = null;
+	Projetos proj = null;
+	Competencias comp = null;
+	Colaboradores colab = null;
 	
 	public static void main(String[] args) {
 		try {
@@ -39,29 +50,33 @@ public class GUICadSGEC {
 		do {
 			menu.show();
 
-			switch (menu.getOption()) {
+		switch (menu.getOption()) {
 			case 1:
-				Funcionarios func = null;
-				verArquivo("\nRelação de Funcionários:\n","src/arquivos/funcionarios.csv", func, parserFun);
+				
+				verArquivo("\nRelação de Funcionários:\n","src/arquivos/funcionarios.csv", func, parserFun, VetorFuncionarios);
+				VetorFuncionarios.getVetor();
 				break;
 			case 2:
-				Projetos proj = null;
-				verArquivo("\nRelação de Projetos:\n","src/arquivos/projetos.csv", proj, parserProj);
-				System.out.print("chegou aqui");
+				
+				verArquivo("\nRelação de Projetos:\n","src/arquivos/projetos.csv", proj, parserProj, VetorProjetos);
+				VetorProjetos.getVetor();
 				break;
 			case 3:
-				Competencias comp = null;
-				verArquivo("\nRelação de Competencias:\n","src/arquivos/competencias.csv", comp, parserComp);
+				
+				verArquivo("\nRelação de Competencias:\n","src/arquivos/competencias.csv", comp, parserComp, VetorCompetencias);
+				VetorCompetencias.getVetor();
 				break;
 			case 4:
-				Colaboradores colab = null;
-				verArquivo("\nRelação de Colaboradores:\n","src/arquivos/colaboradores.csv", colab, parserColab);
+				
+				verArquivo("\nRelação de Colaboradores:\n","src/arquivos/colaboradores.csv", colab, parserColab, VetorColaboradores);
+				VetorColaboradores.getVetor();
 			default:
 				System.exit(0);
 			}//fecha switch
 		} while (true);
 	}//fecha run
 
+	
 	
 	//VETOR
 	/*//saber lugar do vetor
@@ -80,14 +95,14 @@ public class GUICadSGEC {
 	}	
 		*/
 	
-	private <T> void verArquivo(String texto,String arquivo, Object objeto, Parser parser) throws FileNotFoundException {
+	private <V> void verArquivo(String texto,String arquivo, V objeto, Parser parser,Vetor<V> vetor) throws FileNotFoundException {
 		//Parser<Object> parse = new ObjectParser();
-		CSVReader<T> reader = new CSVReader<>(arquivo, parser);
+		CSVReader<V> reader = new CSVReader<>(arquivo, parser);
 		reader.skipLine(); //se houver cabeçalho cabecalho
 		System.out.println(texto);
 		while (reader.hasNext()) {
 			objeto = reader.readObject();
-			System.out.println(objeto);
+			vetor.append(objeto);
 		}//fecha while
 		System.out.println("---------------------------------------\n\n");
 		reader.close();
