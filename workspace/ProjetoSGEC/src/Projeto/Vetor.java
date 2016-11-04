@@ -2,7 +2,7 @@ package Projeto;
 
 public class Vetor <V> {
 	@SuppressWarnings("unchecked")
-	private V[] dados = (V[]) new Object[20];
+	private V[] dados = (V[]) new Object[6];
 	private int numeroElementos = 0;
 	
 	
@@ -32,8 +32,11 @@ public class Vetor <V> {
 	
 	public void getVetor(){
 		for(int i = 0; i < dados.length; i++){
-			System.out.println(dados[i]);
-		}
+			if(dados[i] != null){
+				System.out.println("indice: " + i + "\n");
+				System.out.println(dados[i]);
+			}//fecha if
+		}//fecha for
 	}//fecha getVetor
 	
 	public int size() {
@@ -58,8 +61,12 @@ public class Vetor <V> {
 	
 	public void remove(int index) {
 		validaIndex(index);
-		for (int i = index; i < numeroElementos-1; i++) {
-			dados[i] = dados[i+1];
+		for (int i = index; i < numeroElementos; i++) {
+				if(dados[i+1] == null){
+					dados[i] = null;
+				}else{
+				dados[i] = dados[i+1];
+				}//fecha if-else
 		}
 		numeroElementos--;
 	}//fecha remove

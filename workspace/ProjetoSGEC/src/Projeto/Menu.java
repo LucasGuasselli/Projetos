@@ -3,7 +3,7 @@ import com.senac.SimpleJava.Console;
 
 public class Menu {
 
-	Opcao[] opcoes = new Opcao[5];
+	Opcao[] opcoes = new Opcao[10];
 
 	int numOpcoes = 0;
 
