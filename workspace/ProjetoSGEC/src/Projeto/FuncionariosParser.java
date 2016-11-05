@@ -9,7 +9,7 @@ public class FuncionariosParser implements Parser<Funcionarios> {
 		Scanner arquivo = new Scanner(dados);
 		arquivo.useDelimiter(";");
 		String nome = arquivo.next();
-		String salario = arquivo.next();
+		double salario = Double.parseDouble(arquivo.next());
 		int num_competencias = Integer.parseInt(arquivo.next());
 		
 				Funcionarios func = new Funcionarios(nome, salario, num_competencias);
