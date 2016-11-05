@@ -19,32 +19,19 @@ public class Funcionarios {
 		this.competencia = new String[this.num_competencias];
 	}//fecha construtor	
 
-	/*public Funcionarios cadastraFuncionario(String nome, double salario, int num_comp){
-		System.out.println("chegou aqui");	
-		Funcionarios func = new Funcionarios(nome, salario, num_comp);
-		System.out.println("chegou aqui");		
-		func.insereCompetencias();
-		return func;
-	}//fecha cadastraFuncionario
-	*/
-	
+		
 	public void insereCompetencias(){
-		int opcao = 0;
+		
 		do{
-			System.out.println("OPCOES");
-			System.out.println("1- cadastra competencia (LIMITE - " + num_competencias + ")");
-			System.out.println("0- encerra cadastro de competencia");
-				opcao = ler.nextInt();
-				if(opcao == 1 && indice < competencia.length){
-					System.out.println("Informe a competencia: ");
+			
+			System.out.println("Informe o nome da competencia: " + (indice+1));
+				
+				if(indice < competencia.length){
 						competencia[indice] = ler.next();
 							indice++;
 				}//fecha if
-				if(opcao > 1 || opcao < 0){
-					System.out.println("OPCAO INVALIDA!!");
-				}//fecha if
-			
-		}while(opcao != 0);
+						
+		}while(indice < competencia.length);
 		
 	}//insere competencias
 	
@@ -59,10 +46,9 @@ public class Funcionarios {
 		String comp = "";
 		
 		for (int i=0;i<num_competencias;i++) {
-			if(i<num_competencias){
+			if(i<num_competencias-1 ){
 				comp = comp + competencia[i] + ", ";						
-			}//fecha if
-			if(i == num_competencias-1){
+			}else{
 				comp = comp + competencia[i] + ". ";	
 			}//fecha if
 		} //fecha for

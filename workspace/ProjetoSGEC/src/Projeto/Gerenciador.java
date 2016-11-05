@@ -98,7 +98,7 @@ public class Gerenciador {
 		} while (true);
 	}//fecha run
 	
-	private <V> void cadastraFuncionario(){
+	private void cadastraFuncionario(){
 		Funcionarios objeto =	new Funcionarios (digita("Digite o nome do funcionario: "), 
 				Double.parseDouble(digita("Digite o salario do funcionario: ")),
 				Integer.parseInt(digita("Informe o numero de competencias")));
