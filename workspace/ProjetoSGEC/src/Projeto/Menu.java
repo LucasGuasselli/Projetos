@@ -3,7 +3,7 @@ import com.senac.SimpleJava.Console;
 
 public class Menu {
 
-	Opcao[] opcoes = new Opcao[10];
+	Opcao[] opcoes = new Opcao[15];
 
 	int numOpcoes = 0;
 
@@ -15,10 +15,12 @@ public class Menu {
 
 	public void show() {		
 		for (int i = 0; i < numOpcoes; i++) {
-			Console.println("[", i+1 , "] ",opcoes[i].getTexto());
+			
 				if(i==numOpcoes-1){
 					Console.println("[", "0" , "] ",opcoes[i].getTexto());
-				}//fecha if
+				}else{
+					Console.println("[", i+1 , "] ",opcoes[i].getTexto());
+				}//fecha if-else
 		}//fecha for
 		Console.println("ESCOLHA UMA OPÇÃO: ");
 	}//fecha show

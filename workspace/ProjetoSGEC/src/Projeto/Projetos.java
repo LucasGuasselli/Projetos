@@ -7,14 +7,16 @@ public class Projetos {
 	Scanner ler = new Scanner(System.in);
 	
 	private String nome;
+	private String situacao;
 	private LocalDate data_inicio;
 	private LocalDate data_fim;
+	private LocalDate hoje = LocalDate.now();
 	private int num_competencias;
 	private String[] competencia;
 	private int indice = 0;
 		
 	public Projetos(String nome, LocalDate data_inicio, LocalDate data_fim,
-			int num_competencias){
+		int num_competencias){
 		this.nome = nome;
 		this.data_inicio = data_inicio;
 		this.data_fim = data_fim;
@@ -42,9 +44,19 @@ public class Projetos {
 		return comp;
 	}//fecha mostraCompetencia
 	
+	public String situacaoProjeto(){
+		if(data_inicio.isEqual(hoje) || data_inicio.isBefore(hoje) && data_fim.isAfter(hoje)){
+			situacao = " projeto ativo\n"; 
+		}else{
+			situacao = " projeto inativo";
+		}//if-else
+		return situacao;
+	}//fecha situacaoProjeto
+	
 	@Override
 	public String toString() {
 		return "Projeto: " + nome + 
+				"\nSituacao: " + situacaoProjeto() +
 				"\nInicio: " + data_inicio + 
 				"\nFim: " + data_fim + 
 				"\nNumero de competencias: " + num_competencias +
