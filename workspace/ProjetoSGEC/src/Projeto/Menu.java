@@ -16,7 +16,10 @@ public class Menu {
 	public void show() {		
 		for (int i = 0; i < numOpcoes; i++) {
 			Console.println("[", i+1 , "] ",opcoes[i].getTexto());
-		}
+				if(i==numOpcoes-1){
+					Console.println("[", "0" , "] ",opcoes[i].getTexto());
+				}//fecha if
+		}//fecha for
 		Console.println("ESCOLHA UMA OPÇÃO: ");
 	}//fecha show
 

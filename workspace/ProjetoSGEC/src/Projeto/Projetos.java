@@ -1,14 +1,17 @@
 package Projeto;
 
 import java.time.LocalDate;
+import java.util.Scanner;
 
 public class Projetos {
+	Scanner ler = new Scanner(System.in);
 	
 	private String nome;
 	private LocalDate data_inicio;
 	private LocalDate data_fim;
 	private int num_competencias;
 	private String[] competencia;
+	private int indice = 0;
 		
 	public Projetos(String nome, LocalDate data_inicio, LocalDate data_fim,
 			int num_competencias){
@@ -29,10 +32,9 @@ public class Projetos {
 		String comp = "";
 		
 		for (int i=0;i<num_competencias;i++) {
-			if(i<num_competencias){
+			if(i<num_competencias-1 ){
 				comp = comp + competencia[i] + ", ";						
-			}//fecha if
-			if(i == num_competencias-1){
+			}else{
 				comp = comp + competencia[i] + ". ";	
 			}//fecha if
 		} //fecha for
@@ -48,4 +50,18 @@ public class Projetos {
 				"\nNumero de competencias: " + num_competencias +
 				"\nCompetencias: " + mostraCompetencia() + "\n";
 	}//fecha toString
+
+	public void insereCompetencias() {
+do{
+			
+			System.out.println("Informe o nome da competencia: " + (indice+1));
+				
+				if(indice < competencia.length){
+						competencia[indice] = ler.next();
+							indice++;
+				}//fecha if
+						
+		}while(indice < competencia.length);
+		
+	}//fecha cadastraProjeto
 }//fecha classe
