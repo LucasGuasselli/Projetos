@@ -54,6 +54,8 @@ public class Gerenciador {
 		Opcao cadFunc = new Opcao("Cadastrar Funcionario");
 		Opcao cadProj = new Opcao("Cadastrar Projeto");
 		Opcao cadComp = new Opcao("Cadastrar Competencia");
+		//Opcao asscFunProj = new Opcao("Associar funcionario a projeto");
+
 		Opcao sair = new Opcao("Sair");
 
 		menu.addOption(verFunc);
@@ -66,8 +68,10 @@ public class Gerenciador {
 		menu.addOption(cadFunc);
 		menu.addOption(cadProj);
 		menu.addOption(cadComp);
+		//menu.addOption(asscFunProj);
 		menu.addOption(sair);
 
+		try{
 		do {
 			menu.show();
 
@@ -95,25 +99,36 @@ public class Gerenciador {
 			case 6:
 				VetorProjetos.remove(Integer.parseInt(digita("Digite um indice do projeto "
 					+ "que deseja remover")));
-			break;
+				break;
 			case 7:
 				VetorCompetencias.remove(Integer.parseInt(digita("Digite um indice da competencia "
 						+ "que deseja remover")));
 				break;
 			case 8:
 				 cadastraFuncionario();
-			break;	
+				 break;	
 			case 9:
 				cadastraProjetos();
-			break;	
+				break;	
 			case 10:
 				cadastraCompetencias();
-				break;
+				break;				
 			default:
 				System.exit(0);
 			}//fecha switch
 		} while (true);
+		}catch(Exception e){
+			System.out.println("ERRO!!INSIRA UM NUMERO CONFORME MENU!!");
+		}
 	}//fecha run
+	
+	private void cadastraColaboradores(){
+		String nome_projeto;
+		
+		VetorProjetos.getVetor();
+	//	VetorProjetos.dados[1];
+		
+	}//fecha classe
 	
 	private void cadastraCompetencias() {
 		Competencias objeto = new Competencias(digita("Informe a competencia: "));
